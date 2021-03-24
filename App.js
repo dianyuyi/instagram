@@ -3,11 +3,19 @@ import React, { Component } from "react";
 import { View, Text } from "react-native";
 import firebase from "firebase/app";
 import { FIREBASE_API_KEY } from "@env";
+
+import { Provider } from "react-redux";
+import { createStore, applyMiddleware } from "redux";
+import rootReducer from "./redux/reducers";
+import thunk from "redux-thunk";
+
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import LandingScreen from "./components/auth/Landing";
 import RegisterScreen from "./components/auth/Register";
 import LoginScreen from "./components/auth/Login";
+import MainScreen from "./components/Main";
+import AddScreen from "./components/main/Add";
 
 const firebaseConfig = {
   apiKey: FIREBASE_API_KEY,
@@ -24,6 +32,8 @@ if (firebase.apps.length === 0) {
 }
 
 const Stack = createStackNavigator();
+
+const store = createStore(rootReducer, applyMiddleware(thunk));
 
 export class App extends Component {
   constructor(props) {
@@ -53,22 +63,39 @@ export class App extends Component {
     if (!loaded) {
       return (
         <View style={{ flex: 1, justifyContent: "center" }}>
-          <Text>Loading</Text>
+          <Text>Loading...</Text>
         </View>
       );
     }
+    if (!loggedIn) {
+      return (
+        <NavigationContainer>
+          <Stack.Navigator intialRouteName="Landing">
+            <Stack.Screen
+              name="Landing"
+              component={LandingScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen name="Register" component={RegisterScreen} />
+            <Stack.Screen name="Login" component={LoginScreen} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      );
+    }
+
     return (
-      <NavigationContainer>
-        <Stack.Navigator intialRouteName="Landing">
-          <Stack.Screen
-            name="Landing"
-            component={LandingScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen name="Register" component={RegisterScreen} />
-          <Stack.Screen name="Login" component={LoginScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <Provider store={store}>
+        <NavigationContainer>
+          <Stack.Navigator intialRouteName="Main">
+            <Stack.Screen
+              name="Main"
+              component={MainScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen name="Add" component={AddScreen} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </Provider>
     );
   }
 }
