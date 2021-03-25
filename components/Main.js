@@ -8,7 +8,6 @@ import { bindActionCreators } from "redux";
 import { fetchUser } from "../redux/actions/index";
 
 import FeedScreen from "./main/Feed";
-
 import ProfileScreen from "./main/Profile";
 
 const Tab = createMaterialBottomTabNavigator();
@@ -21,18 +20,18 @@ export class Main extends Component {
     this.props.fetchUser();
   }
   render() {
-    const { currentUser } = this.props;
+    // const { currentUser } = this.props;
 
-    if (currentUser == undefined) {
-      return <View></View>;
-    }
+    // if (currentUser == undefined) {
+    //   return <View></View>;
+    // }
 
     return (
       <Tab.Navigator initialRouteName="Feed" labeled={false}>
         <Tab.Screen
           name="Feed"
           component={FeedScreen}
-          option={{
+          options={{
             tabBarIcon: ({ color, size }) => (
               <MaterialCommunityIcons name="home" color={color} size={26} />
             ),
@@ -47,7 +46,7 @@ export class Main extends Component {
               navigation.navigate("Add");
             },
           })}
-          option={{
+          options={{
             tabBarIcon: ({ color, size }) => (
               <MaterialCommunityIcons name="plus-box" color={color} size={26} />
             ),
@@ -56,7 +55,7 @@ export class Main extends Component {
         <Tab.Screen
           name="Profile"
           component={ProfileScreen}
-          option={{
+          options={{
             tabBarIcon: ({ color, size }) => (
               <MaterialCommunityIcons
                 name="account-circle"
