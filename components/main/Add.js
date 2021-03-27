@@ -9,10 +9,11 @@ import {
 } from "react-native";
 import { Camera } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
+import { NavigationContainer } from "@react-navigation/native";
 // import { usePermissions } from "@use-expo/permissions";
 // import * as Permissions from "expo-permissions";
 
-export default function App() {
+export default function Add({ navigation }) {
   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
   // const [permission, askPermission] = usePermissions(Permissions.CAMERA);
@@ -94,6 +95,10 @@ export default function App() {
       </Button>
       <Button title="Take Picture" onPress={() => takePicture()} />
       <Button title="Pick Image from Gallery" onPress={() => pickImage()} />
+      <Button
+        title="Save"
+        onPress={() => navigation.navigate("Save", { image })}
+      />
       {image && <Image source={{ uri: image }} style={{ flex: 1 }} />}
     </View>
   );
